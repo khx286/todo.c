@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
 	noecho();
 
 	struct task *curr_task;
-	char ch = 0;
+	char key = 0;
 	int quit = 0;
 	int changed = 0;
 	
@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
 			printw("- [%c] %s \n", context_char, curr_task->title);
 		}
 
-		switch (ch) {
+		switch (key) {
 		case '\t':
 			if (context == todo) {
 				context = done;
@@ -385,31 +385,29 @@ int main(int argc, char *argv[])
 			break;
 		case 'j':
 			message = "";
-			if (!context->curr)
-				break;
-			if (context->curr->next)
+			if (context->curr && context->curr->next)
 				context->curr = context->curr->next;
 			break;
 		case 'k':
 			message = "";
-			if (!context->curr)
-				break;
-			if (context->curr->prev)
+			if (context->curr && context->curr->prev)
 				context->curr = context->curr->prev;
 			break;
 		case 'J':
 			message = "";
-			if (!context->curr || !context->curr->next)
-				break;
-			swap_tasks(context->curr, context->curr->next);
-			context->curr = context->curr->next;
+			if (context->curr && context->curr->next) {
+				swap_tasks(context->curr, context->curr->next);
+				context->curr = context->curr->next;
+				changed = 1;
+			}
 			break;
 		case 'K':
 			message = "";
-			if (!context->curr || !context->curr->prev)
-				break;
-			swap_tasks(context->curr, context->curr->prev);
-			context->curr = context->curr->prev;
+			if (context->curr && context->curr->prev) {
+				swap_tasks(context->curr, context->curr->prev);
+				context->curr = context->curr->prev;
+				changed = 1;
+			}
 			break;
 		case 'g':
 			context->curr = context->head;
@@ -466,17 +464,17 @@ int main(int argc, char *argv[])
 			char *title = get_input();
 			timeout(16);
 
-			if (title != NULL) {
-				if (ch == 'o')
-					insert_below(context, create_task(title));
-				else
-					insert_above(context, create_task(title));
-				free(title);
-				message = "Added a new task";
-			} else {
+			if (!title) {
 				message = "Aborted";
+				break;
 			}
 
+			if (key == 'o')
+				insert_below(context, create_task(title));
+			else
+				insert_above(context, create_task(title));
+			free(title);
+			message = "Added a new task";
 			changed = 1;
 			break;
 		case 'w':
@@ -500,7 +498,7 @@ int main(int argc, char *argv[])
 			quit = 1;
 		}
 
-		ch = getch();
+		key = getch();
 		refresh();
 	}
 
