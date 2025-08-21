@@ -134,6 +134,25 @@ void transfer_task(struct task_list *from, struct task_list *to)
 	to->size += 1;
 }
 
+void swap_tasks(struct task *first_task, struct task *second_task)
+{
+	if (!first_task || !second_task)
+		return;
+
+	char *temp_title = (char *) malloc(sizeof(char) * strlen(first_task->title) + 1);
+	strcpy(temp_title, first_task->title);
+
+	free(first_task->title);
+	first_task->title = (char *) malloc(sizeof(char) * strlen(second_task->title) + 1);
+	strcpy(first_task->title, second_task->title);
+
+	free(second_task->title);
+	second_task->title = (char *) malloc(sizeof(char) * strlen(temp_title) + 1);
+	strcpy(second_task->title, temp_title);
+
+	free(temp_title);
+}
+
 void delete_curr(struct task_list *list)
 {
 	if (!list->curr)
@@ -377,6 +396,20 @@ int main(int argc, char *argv[])
 				break;
 			if (context->curr->prev)
 				context->curr = context->curr->prev;
+			break;
+		case 'J':
+			message = "";
+			if (!context->curr || !context->curr->next)
+				break;
+			swap_tasks(context->curr, context->curr->next);
+			context->curr = context->curr->next;
+			break;
+		case 'K':
+			message = "";
+			if (!context->curr || !context->curr->prev)
+				break;
+			swap_tasks(context->curr, context->curr->prev);
+			context->curr = context->curr->prev;
 			break;
 		case 'g':
 			context->curr = context->head;
