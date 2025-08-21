@@ -153,6 +153,16 @@ void swap_tasks(struct task *first_task, struct task *second_task)
 	free(temp_title);
 }
 
+void rename_curr(struct task_list *list, char *new_title)
+{
+	if (!list->curr)
+		return;
+
+	free(list->curr->title);
+	list->curr->title = (char *) malloc(sizeof(char) * strlen(new_title) + 1);
+	strcpy(list->curr->title, new_title);
+}
+
 void delete_curr(struct task_list *list)
 {
 	if (!list->curr)
@@ -319,6 +329,7 @@ char *get_input()
 	return input;
 }
 
+
 int main(int argc, char *argv[])
 {
 	if (argc > 2 || argc == 2 && strcmp(argv[1], "--help") == 0) {
@@ -416,6 +427,31 @@ int main(int argc, char *argv[])
 		case 'G':
 			context->curr = context->tail;
 			message = "";
+			break;
+		case 'r':
+			if (context == done) {
+				message = "Can't rename the task here";
+				break;
+			} else if (!context->curr) {
+				message = "Nothing to rename";
+				break;
+			}
+
+			timeout(-1);
+			mvprintw(0, 0, "\n");
+			mvprintw(0, 0, PROMPT);
+			char *new_title = get_input();
+			timeout(16);
+
+			if (!new_title) {
+				message = "Aborted";
+				break;
+			}
+
+			rename_curr(context, new_title);
+			free(new_title);
+			message = "Renamed";
+			changed = 1;
 			break;
 		case 'd':
 			if (!context->curr) {
