@@ -5,8 +5,8 @@
 
 #define FILENAME "TODO"
 
-#define TODO_PREFIX "TODO: "
-#define DONE_PREFIX "DONE: "
+#define TODO_PREFIX "- [ ] "
+#define DONE_PREFIX "- [x] "
 #define PREFIX_LEN 6
 
 #define PROMPT ">> "
