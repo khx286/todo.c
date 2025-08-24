@@ -25,7 +25,7 @@ struct task_list {
 	size_t size;
 };
 
-struct task_list *create_list()
+struct task_list *create_list(void)
 {
 	struct task_list *list = (struct task_list *) malloc(sizeof(struct task_list));
 	list->head = NULL;
@@ -275,7 +275,7 @@ void write_list(const char *filename, struct task_list *todo, struct task_list *
 	fclose(list_file);
 }
 
-char *get_input()
+char *get_input(void)
 {
 	int max_x, max_y, x, y;
 	getmaxyx(stdscr, max_y, max_x);
