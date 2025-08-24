@@ -517,6 +517,9 @@ int main(int argc, char *argv[])
 			message = "Written";
 			changed = 0;
 			break;
+		case 'Q':
+			quit = 1;
+			break;
 		case 'q':
 			if (changed) {
 				timeout(-1);

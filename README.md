@@ -22,6 +22,6 @@ program for managing tasks
 | `d`      | delete the current task                                                     |
 | `x`      | mark the current task as done or not done (related to the current context)  |
 | `w`      | write to file                                                               |
-| `q`      | exit                                                                        |
+| `q`, `Q` | exit, forced exit                                                           |
 
 use `./todo --help` for more information
